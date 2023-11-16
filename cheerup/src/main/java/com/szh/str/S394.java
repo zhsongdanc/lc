@@ -85,6 +85,7 @@ public class S394 {
 
 
         String s = new S394().decodeString(str);
+
         System.out.println(s);
     }
 }
