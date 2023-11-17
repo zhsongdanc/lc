@@ -7,7 +7,10 @@ package com.szh.str;
  */
 
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Deque;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * 给定一个经过编码的字符串，返回它解码后的字符串。
@@ -83,9 +86,24 @@ public class S394 {
     public static void main(String[] args) {
         String str = "ad3[b]3[r4[dfae3[bb]woio]ae]";
 
-
         String s = new S394().decodeString(str);
 
         System.out.println(s);
+
+        copyTest();
+//        new HashMap<>().keySet().size()
+    }
+
+    static void copyTest() {
+        List<Integer> list1 = new ArrayList<>();
+        List<Integer> list2 = new ArrayList<>();
+
+        List<List<Integer>> res = new ArrayList<>();
+        res.add(list1);
+        res.add(list2);
+
+        List<List<Integer>> copy = new ArrayList<>(res);
+        System.out.println("");
+
     }
 }
