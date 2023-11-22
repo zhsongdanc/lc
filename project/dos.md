@@ -58,6 +58,7 @@ public class SQLCharExpr extends SQLTextLiteralExpr implements SQLValuableExpr{
 
 ### AST构成
 ![img.png](img.png)
+思考遍历AST是前序？中序？
 ### 几个Visitor
 #### 1.SqlRemoveNullParameterConditionScriptArgsVisitor
 + 将非必填，且前端未传值的参数对应的where条件从sql语句中 删除
