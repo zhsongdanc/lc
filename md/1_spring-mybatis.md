@@ -26,5 +26,6 @@
 25. 4、拦截器执行流程
 26. Spring async注解原理
 27. 怎么实现AOP，实现动态代理的方式
-28. 
+28. 22. 11，AnnotaionConfigApplicationContext启动流程（默认的bean后置处理器，beanfactory后置处理器，refresh（）关键步骤）（√）
+
 ### reference answer
