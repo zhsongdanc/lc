@@ -29,17 +29,7 @@
 24. jvm常用参数
 25. 对象头
 26. JVM为什么把堆区进一步的划分
-
-
-
-
-
-
-
-
-
-
-
+27. 4. Full GC会在哪些场景发生？
 
 
 
@@ -76,6 +66,7 @@ Java 中堆和栈有什么区别？
 常用的一些gc参数
 常用的工具
 ### reference answer
+refer link: https://www.cnblogs.com/chiangchou/p/jvm-2.html#_label2_6
 
 24.-Xms(JVM的初始堆内存大小。例如，-Xms512m表示将初始堆内存设置为512MB。),-Xmx(JVM的最大堆内存大小)
 -Xss设置每个线程的栈大小。默认值因平台而异。例如，-Xss256k表示将每个线程的栈大小设置为256KB。
@@ -84,3 +75,5 @@ Java 中堆和栈有什么区别？
 -XX:+UseG1GC：启用G1（Garbage-First）垃圾回收器。G1垃圾回收器是JDK 7及之后引入的一种全新的垃圾回收器，可以在更短的停顿时间内实现更高的吞吐量。
 -XX:ParallelGCThreads：设置并行垃圾回收器的线程数。例如，-XX:ParallelGCThreads=4表示将并行垃圾回收器的线程数设置为4。
 25.markword(32bit/64bit),指针（指向对应的Class对象），数组长度
+
+
