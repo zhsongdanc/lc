@@ -71,4 +71,10 @@ public class SQLCharExpr extends SQLTextLiteralExpr implements SQLValuableExpr{
 
 
 
+### todo
+整体流程
+sql-json
+分页查询
+多版本
+加解密
 血缘用来做什么？
