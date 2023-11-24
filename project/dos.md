@@ -68,3 +68,7 @@ public class SQLCharExpr extends SQLTextLiteralExpr implements SQLValuableExpr{
 #### 3.InterfaceSQLStructureVisitor
 ### other
 #### 判断是否在where字句中
+
+
+
+血缘用来做什么？
