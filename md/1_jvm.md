@@ -41,19 +41,11 @@
 
 说一下类装载的执行过程？
 
-怎么判断对象是否可以被回收？
-
-Java 中都有哪些引用类型？
-
-说一下 JVM 有哪些垃圾回收算法？
-
 说一下 JVM 有哪些垃圾回收器？
 
 详细介绍一下 CMS 垃圾回收器？
 
-新生代垃圾回收器和老生代垃圾回收器都有哪些？有什么区别？
 
-简述分代垃圾回收器是怎么工作的？
 
 说一下 JVM 调优的工具？
 
@@ -61,9 +53,6 @@ Java 中都有哪些引用类型？
 
 怎么获取 Java 程序使用的内存？堆使用的百分比？
 
-Java 中堆和栈有什么区别？
-
-你能保证 GC 执行吗？
 
 常用的工具
 ### reference answer
@@ -74,6 +63,7 @@ https://blog.csdn.net/lhy18235303007/article/details/115774839
 
 
 3.缺点：浮动垃圾，预留空间不足触发并发失败使用serial old进行回收，内存碎片
+14.(1)可预测的停顿时间（2）内存布局（3）大对象Region(4)g1回收过程（5）g1新生代回收（6）混合回收
 24.-Xms(JVM的初始堆内存大小。例如，-Xms512m表示将初始堆内存设置为512MB。),-Xmx(JVM的最大堆内存大小)
 -Xss设置每个线程的栈大小。默认值因平台而异。例如，-Xss256k表示将每个线程的栈大小设置为256KB。
 -XX:+UseParallelGC:启用并行垃圾回收器。并行垃圾回收器可以提高垃圾回收的效率。
@@ -93,4 +83,11 @@ https://blog.csdn.net/lhy18235303007/article/details/115774839
 -XX:+UseCMSCompactAtFullCollection（默认开启，在回收时整理，导致stw）
 -XX:CMSFullGCsBeforeCompaction CMS在执行过若干次不整理空间的 Full GC 之后，下一次进入 Full GC 前会先进行碎片整理（默认值为0，表示每次进入 Full GC 时都进行碎片整理
 
-g1常用参数：
+g1常用参数：（https://www.cnblogs.com/chiangchou/p/jvm-2.html#_label2_6）
+-XX: MaxGCPauseMillis  指定停顿时间，默认200ms，太低可能导致回收速度赶不上分配速度，导致堆满降低性能
+-XX:G1HeapRegionSize 默认堆大小/2048，每个region大小
+-XX:G1NewSizePercent，-XX:G1MaxNewSizePercent新生代默认占堆内存的5%，但最多不超过60%，超过之后将edon区复制到survivor区，实际根据停顿时间选取价值最大的
+-XX:InitiatingHeapOccupancyPercent 默认45%，达到会触发一次年轻代+老年代的混合回收
+-XX:G1MixedGCCountTarget 默认8次，一次gc中几次混合回收
+-XX:G1HeapWastePercent，默认值是 5%。就是在混合回收时，Region回收后，就会不断的有新的Region空出来，一旦空闲出来的Region数量超过堆内存的5%，就会立即停止混合回收，即本次混合回收就结束了。
+-XX:G1MixedGCLiveThresholdPercent，默认值是85%。意思是回收Region的时候，必须存活对象低于Region大小的85%时才可以进行回收，一个Region存活对象超过85%，就不必回收它了，因为要复制大部分存活对象到别的Region，这个成本是比较高的
