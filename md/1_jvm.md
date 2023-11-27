@@ -33,6 +33,7 @@
 28. 堆外内存怎么回收的
 29. 三个垃圾回收指标（吞吐量、停顿时间、回收频率）
 30. 常用的一些gc参数
+31. new一个对象的过程
 
 
 
@@ -91,3 +92,5 @@ g1常用参数：（https://www.cnblogs.com/chiangchou/p/jvm-2.html#_label2_6）
 -XX:G1MixedGCCountTarget 默认8次，一次gc中几次混合回收
 -XX:G1HeapWastePercent，默认值是 5%。就是在混合回收时，Region回收后，就会不断的有新的Region空出来，一旦空闲出来的Region数量超过堆内存的5%，就会立即停止混合回收，即本次混合回收就结束了。
 -XX:G1MixedGCLiveThresholdPercent，默认值是85%。意思是回收Region的时候，必须存活对象低于Region大小的85%时才可以进行回收，一个Region存活对象超过85%，就不必回收它了，因为要复制大部分存活对象到别的Region，这个成本是比较高的
+
+双亲委派：https://blog.csdn.net/justloveyou_/article/details/72231425?spm=1001.2101.3001.6650.9&utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-9-72231425-blog-52631940.235%5Ev38%5Epc_relevant_sort_base1&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-9-72231425-blog-52631940.235%5Ev38%5Epc_relevant_sort_base1&utm_relevant_index=10

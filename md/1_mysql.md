@@ -34,6 +34,8 @@
 33. MySQL引擎，MyISAM没有事务怎么办
 34. 哈希索引
 35. MySQL实现分布式锁
+36. 分区表和分表
+37. 哪些情况下适合/不适合建索引
 
 
 
@@ -47,3 +49,38 @@
 
 
 ### reference answer
+1.(https://www.cnblogs.com/pengpengdeyuan/p/15001739.html)
+            支持事务     聚簇索引  行锁表锁    mvcc
+innodb        yes         yes      行         yes
+myisam         no         no       表锁        no
+memory         no         no       表         no        数据完全存在内存，不支持持久性
+7.优化
+explain
+![img_3.png](img_3.png)
+![img_2.png](img_2.png)
+select_type:
+
+![img_4.png](img_4.png)
+type:
+
+![img_5.png](img_5.png)
+一般至少达到range，最好达到ref
+
+key_len:
+
+![img_6.png](img_6.png)
+ref:
+![img_7.png](img_7.png)
+rows:
+![img_8.png](img_8.png)
+小表驱动大表
+order by优化
+group by 优化
+14.![img_1.png](img_1.png)
+readview记录活跃事务list的原因是因为可能有类似事务4这样开始晚但结束早的事务
+31.索引下推（https://xingliuhua.github.io/posts/mysql_%E7%B4%A2%E5%BC%95%E4%B8%8B%E6%8E%A8/）
+MySQL 存储引擎层，先根据过滤条件中包含的索引键确定索引记录区间，再在这个区间的记录上使用包含索引键的其他过滤条件进行过滤，
+之后规避掉不满足的索引记录，只根据满足条件的索引记录回表取回数据上传到 MySQL 服务层。默认开启
+如果用explain，用了索引下推 extra 里显示 “Using index condition” 就代表用了 ICP。
+36.https://www.cnblogs.com/dw3306/p/12620042.html
+37.频繁更新字段不适合建立索引，因为同时需要更新数据和索引
