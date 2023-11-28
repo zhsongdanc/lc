@@ -78,3 +78,99 @@ sql-json
 多版本
 加解密
 血缘用来做什么？
+
+(1)json->sql
+```json
+{
+  "summary": {
+    "pub_code": "vqhizhang-test",
+    "pub_name": "vqhizhang-test",
+    "pub_desc": "vqhizhang-test",
+    "sql": "SELECT id, count(1) as cnt FROM staff_basic group by id order by cnt limit 1000"
+  },
+  "query": {
+    "main_table": {
+      "select": [
+        {
+          "column_code": "staff_basic.id",
+          "column_name": "id",
+          "as": "id",
+          "description": null,
+          "encrypt_flag": 0,
+          "primary_key_flag": 0,
+          "query_operator": [],
+          "data_type": "int4",
+          "basic_flag": 1,
+          "encrypt_salt_type": "no",
+          "sample_data": [
+            "",
+            ""
+          ],
+          "order": 10,
+          "source_need_decrypt": null,
+          "obsolete_flag": 0
+        }
+      ],
+      "as": null,
+      "from": {
+        "set_code": "qps-test",
+        "table_code": "staff_basic",
+        "set_alias": "staff_basic"
+      }
+    },
+    "right_tables": null,
+    "where": "1=1",
+    "args": null,
+    "group_by_field": "GROUP BY id",
+    "order_by_field": null,
+    "limit_order_by": "cnt",
+    "limit": 1000,
+    "with_list": null,
+    "union_list": null
+  }
+}
+
+model json
+[
+  {
+    "code": "qps-test",
+    "ds_config": {
+      "ds_type": "postgresql"
+
+    },
+    "table_name": null,
+    "table_define": {
+      "set": {
+        "table_name": "staff_basic"
+      }
+    }
+  }
+]
+```
+```sql
+SELECT staff_basic.id AS id, count(1) AS cnt
+FROM staff_basic staff_basic
+WHERE 1 = 1
+GROUP BY id
+ORDER BY cnt
+LIMIT 1000
+```
+1.处理with list;2.处理各个select table alias;3.from(可能是子查询);4.join(可能是子查询，join.getOn);
+5.where;6.groupby;7.union;8.order by;9.limit
+
+(2)sql->json
+1.endVisit(SQLSelectStatement)
+(i)如果是union,第一个union作为main,setUnion.无论是否union，fill limit,groupby, order by
+(ii)看是什么类型的table,join,expr,subQuery,union,将select中的字段信息从model拷贝到selects中
+(iii)填充默认select
+(iv)填充where
+2.endVisit(SQLVariantRefExpr) 添加一个必填参数到args里面（仅限于二元或in）
+3.endVisit(SQLCharExpr) 添加一个必填参数或非必填
+4.endVisit(SQLBinaryOpExpr)
+5.endVisit(SQLInListExpr)
+5.endVisit(SQLWithSubqueryClause) 添加with list
+使用Visitor
+(3)remove null
+
+(4)lineage
+填充真实的select字段中的内容
