@@ -28,4 +28,8 @@
 27. 怎么实现AOP，实现动态代理的方式
 28. 22. 11，AnnotaionConfigApplicationContext启动流程（默认的bean后置处理器，beanfactory后置处理器，refresh（）关键步骤）（√）
 29. springboot事务管理，如何在一个请求的每个事务执行结束后都会重置数据库连接的状态，会还到连接池里面吗
+30. springboot启动流程
 ### reference answer
+
+
+30.https://juejin.cn/post/7035910505810100255
