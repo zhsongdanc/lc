@@ -34,6 +34,7 @@
 29. 三个垃圾回收指标（吞吐量、停顿时间、回收频率）
 30. 常用的一些gc参数
 31. new一个对象的过程
+32. init,used,committed,max
 
 
 
@@ -53,6 +54,12 @@
 常用的 JVM 调优的参数都有哪些？
 
 怎么获取 Java 程序使用的内存？堆使用的百分比？
+1.内存和线程状态分析工具：
+jconsole,visualvm,jstat,jmap,MAT,jstack,TDA简单使用
+
+
+jvm，mysql，redis，mq，jdk，os，网络，spring，mybatis,java并发，序列化，rpc，设计模式，netty，zk，mongo,微服务，asm,字节码，docker（k8s）,linux,maven,git,paxos,raft,hbase
+
 
 
 常用的工具
@@ -83,6 +90,23 @@ https://blog.csdn.net/lhy18235303007/article/details/115774839
 -xx:CMSWaitDuration=2000
 -XX:+UseCMSCompactAtFullCollection（默认开启，在回收时整理，导致stw）
 -XX:CMSFullGCsBeforeCompaction CMS在执行过若干次不整理空间的 Full GC 之后，下一次进入 Full GC 前会先进行碎片整理（默认值为0，表示每次进入 Full GC 时都进行碎片整理
+
+32.JVM HeapMemory中Used, Committed and Max的区别
+首先要明确的是used < committed < max，单位是bytes;
+
+其次，各个值的说明如下：
+
+init:JVM启动时从操作系统申请的初始内存，也即JVM参数中-Xms设置的值
+used: 实际使用的内存，包括未被垃圾回收期回收的不可达对象占用的内存，它可以比初始(init)内存小
+committed:操作系统层面为当前JVM进程保留的内存
+可能等于或大于used内存；JVM可以从操作系统申请很多内存，但是不一定真正使用它，但是操作系统可以为java进程保留相关内存
+可能小于init内存，因为JVM可以回收内存并将其归还给操作系统
+如果JVM需要更多内存，它将尝试从操作系统申请，此时commited会变大
+如果创建一个新对象，并且此时used < committed，这时JVM不需要直接从操作系统申请内存，而是直接使用已经申请好的committed内存，确保新对象能创建成功
+如果创建一个新对象，并且总内存使用量已经操作committed值，JVM在创建对象前需要向操作系统申请额外的内存，并且不保证能申请成功，可能出现OOM
+max:JVM能从操作系统申请的最大内存
+该值一般通过JVM参数-Xmx设置
+操作系统可能不会为JVM申请这么多的内存，因为操作系统还要为其他进程保留一定的内存，此时可能会导致OOM
 
 g1常用参数：（https://www.cnblogs.com/chiangchou/p/jvm-2.html#_label2_6）
 -XX: MaxGCPauseMillis  指定停顿时间，默认200ms，太低可能导致回收速度赶不上分配速度，导致堆满降低性能
