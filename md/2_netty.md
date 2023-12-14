@@ -10,8 +10,8 @@
 
 ### to think
 1.netty中，一个客户端tcp建立连接后，读写请求会绑定到另一个eventLoop，那么这个eventLoop只处理当前连接吗
-2.
-
+2.EventLoop执行execute方法什么时候执行？
+3.NioEventLoop包含了一个子executor和thread，executor是用来干什么的，什么时候创建的
 
 
 
