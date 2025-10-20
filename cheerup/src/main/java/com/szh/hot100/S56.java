@@ -17,6 +17,8 @@ public class S56 {
     public static void main(String[] args) {
         int[] x1 = {1,3};
         int[] x2 = {2,6};
+        String s = new String();
+
         int[] x3 = {8,10};
         int[] x4 = {15,18};
 
@@ -34,6 +36,8 @@ class Solution {
 
         sortArray(intervals);
 
+
+        
 
         List<int[]> res = new ArrayList<>();
         int i = 0;
