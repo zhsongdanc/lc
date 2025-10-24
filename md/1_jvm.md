@@ -35,6 +35,8 @@
 30. 常用的一些gc参数
 31. new一个对象的过程
 32. init,used,committed,max
+33. g1为什么划分多个region
+34. 关注吞吐量和关注stw耗时的区别
 33. jvm内存、os内存、堆外内存、本地内存
 
 
@@ -70,8 +72,10 @@ https://juejin.cn/post/6844904106268557320
 https://blog.csdn.net/lhy18235303007/article/details/115774839
 1. Java 字节码操作框架,可以直接修改class文件，类似aop，而cglib是基于asm的框架
 
-
+答案：
 3.缺点：浮动垃圾，预留空间不足触发并发失败使用serial old进行回收，内存碎片
+4. 标记清除：内存碎片；标记整理：复制对象引用导致stw时间长；复制：内存利用率低
+5. 局部变量表、操作数栈、动态链接（方法的引用）、返回地址
 14.(1)可预测的停顿时间（2）内存布局（3）大对象Region(4)g1回收过程（5）g1新生代回收（6）混合回收
 24.-Xms(JVM的初始堆内存大小。例如，-Xms512m表示将初始堆内存设置为512MB。),-Xmx(JVM的最大堆内存大小)
 -Xss设置每个线程的栈大小。默认值因平台而异。例如，-Xss256k表示将每个线程的栈大小设置为256KB。
@@ -79,9 +83,9 @@ https://blog.csdn.net/lhy18235303007/article/details/115774839
 -XX:+UseConcMarkSweepGC：启用并发标记清除垃圾回收器。并发标记清除垃圾回收器可以减少垃圾回收的停顿时间。
 -XX:+UseG1GC：启用G1（Garbage-First）垃圾回收器。G1垃圾回收器是JDK 7及之后引入的一种全新的垃圾回收器，可以在更短的停顿时间内实现更高的吞吐量。
 -XX:ParallelGCThreads：设置并行垃圾回收器的线程数。例如，-XX:ParallelGCThreads=4表示将并行垃圾回收器的线程数设置为4。
-25.markword(32bit/64bit),指针（指向对应的Class对象），数组长度
+25.对象头【markword(32bit/64bit),指针（指向对应的Class对象），数组长度】、实例数据、填充。
 
-27.永久代空间不足（full gc顺代回收永久代），System.gc可能，老年代空间不足存储大对象，cms导致
+27.永久代空间不足（full gc顺代回收永久代），System.gc可能，老年代空间不足存储大对象，cms导致，元空间/永久代不足
 30.cms常用参数：
 -XX:+UseConcMarkSweepGC
 -XX:CMSInitiatingOccupancyFraction=92，老年代使用比例达到后触发full gc
@@ -91,7 +95,7 @@ https://blog.csdn.net/lhy18235303007/article/details/115774839
 -xx:CMSWaitDuration=2000
 -XX:+UseCMSCompactAtFullCollection（默认开启，在回收时整理，导致stw）
 -XX:CMSFullGCsBeforeCompaction CMS在执行过若干次不整理空间的 Full GC 之后，下一次进入 Full GC 前会先进行碎片整理（默认值为0，表示每次进入 Full GC 时都进行碎片整理
-
+31. 类加载、分配内存、赋0值、设置对象头、初始化
 32.JVM HeapMemory中Used, Committed and Max的区别
 首先要明确的是used < committed < max，单位是bytes;
 
@@ -117,6 +121,8 @@ g1常用参数：（https://www.cnblogs.com/chiangchou/p/jvm-2.html#_label2_6）
 -XX:G1MixedGCCountTarget 默认8次，一次gc中几次混合回收
 -XX:G1HeapWastePercent，默认值是 5%。就是在混合回收时，Region回收后，就会不断的有新的Region空出来，一旦空闲出来的Region数量超过堆内存的5%，就会立即停止混合回收，即本次混合回收就结束了。
 -XX:G1MixedGCLiveThresholdPercent，默认值是85%。意思是回收Region的时候，必须存活对象低于Region大小的85%时才可以进行回收，一个Region存活对象超过85%，就不必回收它了，因为要复制大部分存活对象到别的Region，这个成本是比较高的
-
+33.精准控制停顿时间（选择高优先级的region回收）、回收效率提高（多线程并发标记更快、多次增量回收减少stw时间）、内存弹性分配（固定大小会导致gc频繁）、避免内存碎片（标记整理的好处）、优化了大对象的回收、故障隔离（影响范围只是region范围）
 双亲委派：https://blog.csdn.net/justloveyou_/article/details/72231425?spm=1001.2101.3001.6650.9&utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-9-72231425-blog-52631940.235%5Ev38%5Epc_relevant_sort_base1&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-9-72231425-blog-52631940.235%5Ev38%5Epc_relevant_sort_base1&utm_relevant_index=10
 33. os内存包含jvm内存（jvm管理）本地内存（os管理，jvm可以使用，需要手动处理垃圾回收），堆外内存（本地内存的一部分）
+34. 一家餐厅 1 小时内总共出了 100 份餐，另一家只出了 30 份，前者的 “吞吐量” 更高。哪怕前者平均每份餐要等 10 分钟（延迟比 5 分钟高），但单位时间内处理的订单更多。
+    工厂生产线 1 小时生产 1000 个零件，比 1 小时生产 500 个的吞吐量更高。cms由于cpu执行用户代码时间短所以吞吐量低，parallel的stw耗时长
