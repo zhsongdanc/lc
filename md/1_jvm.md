@@ -35,6 +35,7 @@
 30. 常用的一些gc参数
 31. new一个对象的过程
 32. init,used,committed,max
+33. jvm内存、os内存、堆外内存、本地内存
 
 
 
@@ -67,7 +68,7 @@ jvm，mysql，redis，mq，jdk，os，网络，spring，mybatis,java并发，序
 refer link: https://www.cnblogs.com/chiangchou/p/jvm-2.html#_label2_6
 https://juejin.cn/post/6844904106268557320
 https://blog.csdn.net/lhy18235303007/article/details/115774839
-
+1. Java 字节码操作框架,可以直接修改class文件，类似aop，而cglib是基于asm的框架
 
 
 3.缺点：浮动垃圾，预留空间不足触发并发失败使用serial old进行回收，内存碎片
@@ -118,3 +119,4 @@ g1常用参数：（https://www.cnblogs.com/chiangchou/p/jvm-2.html#_label2_6）
 -XX:G1MixedGCLiveThresholdPercent，默认值是85%。意思是回收Region的时候，必须存活对象低于Region大小的85%时才可以进行回收，一个Region存活对象超过85%，就不必回收它了，因为要复制大部分存活对象到别的Region，这个成本是比较高的
 
 双亲委派：https://blog.csdn.net/justloveyou_/article/details/72231425?spm=1001.2101.3001.6650.9&utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-9-72231425-blog-52631940.235%5Ev38%5Epc_relevant_sort_base1&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-9-72231425-blog-52631940.235%5Ev38%5Epc_relevant_sort_base1&utm_relevant_index=10
+33. os内存包含jvm内存（jvm管理）本地内存（os管理，jvm可以使用，需要手动处理垃圾回收），堆外内存（本地内存的一部分）
