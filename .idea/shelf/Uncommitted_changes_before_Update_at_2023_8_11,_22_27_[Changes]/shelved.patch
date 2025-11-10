@@ -1,0 +1,70 @@
+Index: tag/src/main/java/permutations/S39.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package permutations;\n\n/**\n * @author demussong\n * @describe\n * 给你一个 无重复元素 的整数数组 candidates 和一个目标整数 target ，找出 candidates 中可以使数字和为目标数 target 的 所有 不同组合 ，并以列表形式返回。你可以按 任意顺序 返回这些组合。\n *\n * candidates 中的 同一个 数字可以 无限制重复被选取 。如果至少一个数字的被选数量不同，则两种组合是不同的。\n *\n * 对于给定的输入，保证和为 target 的不同组合数少于 150 个。\n * @date 2023/8/10 23:19\n */\npublic class S39 {\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/tag/src/main/java/permutations/S39.java b/tag/src/main/java/permutations/S39.java
+--- a/tag/src/main/java/permutations/S39.java	(revision 90705a1acb98ec5b31e85c063019f8a47a126506)
++++ b/tag/src/main/java/permutations/S39.java	(date 1691683290349)
+@@ -1,5 +1,8 @@
+ package permutations;
+ 
++import java.util.ArrayList;
++import java.util.List;
++
+ /**
+  * @author demussong
+  * @describe
+@@ -11,4 +14,33 @@
+  * @date 2023/8/10 23:19
+  */
+ public class S39 {
++    public List<List<Integer>> combinationSum(int[] candidates, int target) {
++
++        List<List<Integer>> res = new ArrayList<>();
++        backTrack(res,candidates, 0, target, new ArrayList<>(), 0);
++        return res;
++
++    }
++
++
++    void backTrack(List<List<Integer>> res, int[] candidates, int sum, int target, List<Integer> list, int begin) {
++
++        if (sum > target) {
++            return;
++        }
++        if (sum == target) {
++            res.add(new ArrayList<>(list));
++            return;
++        }
++
++
++        for(int i = begin;i < candidates.length;i++) {
++            list.add(candidates[i]);
++            sum+=candidates[i];
++            // todo-注意 这里最后一个参数
++            backTrack(res,candidates,sum, target, list, i);
++            sum-=candidates[i];
++            list.remove(list.size()-1);
++        }
++    }
+ }
+Index: .idea/vcs.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/vcs.xml b/.idea/vcs.xml
+new file mode 100644
+--- /dev/null	(date 1691680942610)
++++ b/.idea/vcs.xml	(date 1691680942610)
+@@ -0,0 +1,6 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="VcsDirectoryMappings">
++    <mapping directory="$PROJECT_DIR$" vcs="Git" />
++  </component>
++</project>
+\ No newline at end of file
