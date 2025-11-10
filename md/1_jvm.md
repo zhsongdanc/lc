@@ -27,7 +27,7 @@
 22. 7，对象逃逸分析 ，常量替换优化（√）
 23. 16、为什么jdk8将方法区放到了本地内存
 24. jvm常用参数
-25. 对象构成、对象头、为什么对象头要有hashCode
+25. 对象头
 26. JVM为什么把堆区进一步的划分
 27. 4. Full GC会在哪些场景发生？
 28. 堆外内存怎么回收的
@@ -37,6 +37,8 @@
 32. init,used,committed,max
 33. g1为什么划分多个region
 34. 关注吞吐量和关注stw耗时的区别
+33. jvm内存、os内存、堆外内存、本地内存
+
 
 
 
@@ -68,7 +70,7 @@ jvm，mysql，redis，mq，jdk，os，网络，spring，mybatis,java并发，序
 refer link: https://www.cnblogs.com/chiangchou/p/jvm-2.html#_label2_6
 https://juejin.cn/post/6844904106268557320
 https://blog.csdn.net/lhy18235303007/article/details/115774839
-
+1. Java 字节码操作框架,可以直接修改class文件，类似aop，而cglib是基于asm的框架
 
 答案：
 3.缺点：浮动垃圾，预留空间不足触发并发失败使用serial old进行回收，内存碎片
@@ -121,5 +123,6 @@ g1常用参数：（https://www.cnblogs.com/chiangchou/p/jvm-2.html#_label2_6）
 -XX:G1MixedGCLiveThresholdPercent，默认值是85%。意思是回收Region的时候，必须存活对象低于Region大小的85%时才可以进行回收，一个Region存活对象超过85%，就不必回收它了，因为要复制大部分存活对象到别的Region，这个成本是比较高的
 33.精准控制停顿时间（选择高优先级的region回收）、回收效率提高（多线程并发标记更快、多次增量回收减少stw时间）、内存弹性分配（固定大小会导致gc频繁）、避免内存碎片（标记整理的好处）、优化了大对象的回收、故障隔离（影响范围只是region范围）
 双亲委派：https://blog.csdn.net/justloveyou_/article/details/72231425?spm=1001.2101.3001.6650.9&utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-9-72231425-blog-52631940.235%5Ev38%5Epc_relevant_sort_base1&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-9-72231425-blog-52631940.235%5Ev38%5Epc_relevant_sort_base1&utm_relevant_index=10
+33. os内存包含jvm内存（jvm管理）本地内存（os管理，jvm可以使用，需要手动处理垃圾回收），堆外内存（本地内存的一部分）
 34. 一家餐厅 1 小时内总共出了 100 份餐，另一家只出了 30 份，前者的 “吞吐量” 更高。哪怕前者平均每份餐要等 10 分钟（延迟比 5 分钟高），但单位时间内处理的订单更多。
     工厂生产线 1 小时生产 1000 个零件，比 1 小时生产 500 个的吞吐量更高。cms由于cpu执行用户代码时间短所以吞吐量低，parallel的stw耗时长
